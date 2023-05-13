@@ -13,9 +13,11 @@ public class DownloadFileTests
     [Test]
     public async Task DownloadFile_CorrectTokenProvided_ReturnsFile()
     {
+        // Arrange
         var client = SystemUnderTest.GetClient();
         var uploadedFileMock = Encoding.UTF8.GetBytes("mock test string 123");
         
+        // Act
         using var response = await client.Request(ApiConstants.UploadEndpointUrl).PostJsonAsync(new UploadFileRequestModel
         {
             FileBytes = uploadedFileMock,
@@ -28,6 +30,7 @@ public class DownloadFileTests
         var downloadResponse = await client.Request(location).GetAsync();
         var downloadFileModel = await downloadResponse.GetJsonAsync<DownloadFileResponseModel>();
 
+        // Assert
         Assert.AreEqual(uploadedFileMock, downloadFileModel.FileBytes);
         Assert.AreEqual(downloadResponse.StatusCode, StatusCodes.Status200OK);
     }
