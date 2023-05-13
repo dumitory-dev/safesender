@@ -121,7 +121,7 @@ app.MapPost("api/upload", async (
         var result = await filesService.UploadFile(model);
 
         return result.status
-            ? Results.CreatedAtRoute("GetFile", new { result.token })
+            ? Results.Ok(new UploadFileResponseModel { Token = result.token! })
             : Results.StatusCode(StatusCodes.Status500InternalServerError);
     })
     .WithName("SaveFile")

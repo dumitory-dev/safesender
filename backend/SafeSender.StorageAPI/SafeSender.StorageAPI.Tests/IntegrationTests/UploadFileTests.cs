@@ -3,6 +3,7 @@ using Flurl.Http;
 using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using SafeSender.StorageAPI.Models;
+using SafeSender.StorageAPI.Models.ApiModels;
 
 namespace SafeSender.StorageAPI.Tests.IntegrationTests;
 
@@ -25,11 +26,11 @@ public class UploadFileTests
             FileName = "text.txt",
             PasswordHash = Guid.NewGuid().ToString("N"),
         });
+
+        var responseModel = await response.GetJsonAsync<UploadFileResponseModel>();
         
         // Assert
-        Assert.AreEqual(StatusCodes.Status201Created, response.StatusCode);
-        
-        response.Headers.TryGetFirst("Location", out var location);
-        Assert.IsNotNull(location);
+        Assert.AreEqual(StatusCodes.Status200OK, response.StatusCode);
+        Assert.IsFalse(string.IsNullOrEmpty(responseModel.Token));
     }
 }
