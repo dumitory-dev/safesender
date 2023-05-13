@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 using AnonFilesApi.Implementations;
 using AnonFilesApi.Interfaces;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
 using SafeSender.StorageAPI.Database;
 using SafeSender.StorageAPI.Interfaces;
@@ -17,6 +18,18 @@ using SafeSender.StorageAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure logging
+builder.Services.AddHttpLogging(
+    logger =>
+    {
+        logger.LoggingFields = HttpLoggingFields.Request
+                               | HttpLoggingFields.ResponseStatusCode
+                               | HttpLoggingFields.ResponseHeaders;
+        
+        logger.ResponseHeaders.Add("Location");
+        logger.RequestHeaders.Add("Origin");
+    });
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -26,6 +39,20 @@ builder.Services.AddSwaggerGen();
 //     var comments = Path.Combine(builder.Environment.ContentRootPath, "SafeSender.StorageAPI.xml");
 //     options.IncludeXmlComments(comments);
 // });
+
+
+// Add Cors
+const string corsPolicyAcceptAllName = "AcceptAll";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(corsPolicyAcceptAllName,
+        builder => builder
+            .SetIsOriginAllowed(host => true)
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials());
+});
 
 var storageSettingsSection = builder.Configuration.GetSection(StorageOptions.SettingsPath);
 
@@ -50,6 +77,8 @@ builder.Services.AddScoped<IFilesService, FilesService>();
 
 var app = builder.Build();
 
+app.UseHttpLogging();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -60,6 +89,8 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
+
+app.UseCors(corsPolicyAcceptAllName);
 
 app.MapGet("api/download/{token}", async (
         [Required] string token,
