@@ -39,6 +39,7 @@ public class FilesService : IFilesService
             StorageFileIdentifier = model.ExternalStorageToken,
             PasswordHash = model.PasswordHash,
             StorageType = _storageOptions.CurrentValue.Type,
+            OriginalFileSize = model.OriginalFileSize,
         };
         
         await _filesInternalInfosRepository.Add(fileInternalInfo);
@@ -65,6 +66,7 @@ public class FilesService : IFilesService
             ExternalStorageToken = fileInternalInfo.StorageFileIdentifier,
             FileName = fileInternalInfo.FileName,
             PasswordHash = fileInternalInfo.PasswordHash,
+            OriginalFileSize = fileInternalInfo.OriginalFileSize,
         };
     }
 }

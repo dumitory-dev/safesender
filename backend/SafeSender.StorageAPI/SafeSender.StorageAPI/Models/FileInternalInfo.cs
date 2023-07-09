@@ -13,4 +13,5 @@ public class FileInternalInfo
     public string FileName { get; set; } = default!;
     public string StorageFileIdentifier { get; set; } = default!;
     public StorageType StorageType { get; set; }
+    public long OriginalFileSize { get; set; }
 }

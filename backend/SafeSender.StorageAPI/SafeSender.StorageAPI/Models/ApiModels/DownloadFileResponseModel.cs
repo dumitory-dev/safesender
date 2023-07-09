@@ -19,4 +19,9 @@ public class DownloadFileResponseModel
     /// Password for file hash
     /// </summary>
     public string PasswordHash { get; set; } = default!;
+    
+    /// <summary>
+    /// File size before encryption
+    /// </summary>
+    public long OriginalFileSize { get; set; }
 }

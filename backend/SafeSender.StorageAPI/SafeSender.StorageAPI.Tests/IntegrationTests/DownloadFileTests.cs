@@ -21,6 +21,7 @@ public class DownloadFileTests
             ExternalStorageToken = externalStorageToken,
             FileName = "text.txt",
             PasswordHash = Guid.NewGuid().ToString("N"),
+            OriginalFileSize = 120000,
         });
 
         var responseModel = await response.GetJsonAsync<UploadFileResponseModel>();

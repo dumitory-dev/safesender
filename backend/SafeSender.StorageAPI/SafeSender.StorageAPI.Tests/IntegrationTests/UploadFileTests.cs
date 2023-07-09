@@ -23,6 +23,7 @@ public class UploadFileTests
             ExternalStorageToken = externalStorageToken,
             FileName = "Test.txt",
             PasswordHash = Guid.NewGuid().ToString("N"),
+            OriginalFileSize = 120000,
         });
 
         // Assert

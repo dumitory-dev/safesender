@@ -24,4 +24,10 @@ public sealed class UploadFileRequestModel
     /// </summary>
     [Required]
     public string PasswordHash { get; set; } = default!;
+    
+    /// <summary>
+    /// File size before encryption
+    /// </summary>
+    [Required]
+    public long OriginalFileSize { get; set; } = default!;
 }
