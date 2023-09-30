@@ -11,7 +11,12 @@ public enum StorageType
     External,
     
     /// <summary>
-    /// Local storage
+    /// Local filesystem storage
     /// </summary>
-    Local,
+    Filesystem,
+    
+    /// <summary>
+    /// MongoDB GridFS storage
+    /// </summary>
+    GridFS,
 }

@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 using AnonFilesApi.Implementations;
 using AnonFilesApi.Interfaces;
@@ -7,10 +6,8 @@ using MessagePack;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
 using SafeSender.StorageAPI.Database;
-using SafeSender.StorageAPI.Extensions;
 using SafeSender.StorageAPI.Interfaces;
 using SafeSender.StorageAPI.Middlewares;
-using SafeSender.StorageAPI.Models;
 using SafeSender.StorageAPI.Models.ApiModels;
 using SafeSender.StorageAPI.Models.Enums;
 using SafeSender.StorageAPI.Options;
@@ -100,9 +97,9 @@ app.MapGet("api/download/{token}", async (
         [Required] string token,
         [FromServices] IFilesService filesService) =>
     {
-        if(string.IsNullOrEmpty(token))
+        if (string.IsNullOrWhiteSpace(token))
         {
-            return Results.BadRequest();
+            return Results.BadRequest("Token cannot be null, empty or white space");
         }
         
         var downloadFileModel = await filesService.DownloadFile(token);
@@ -135,7 +132,8 @@ Type GetFileStorageRepositoryType(IConfigurationSection configurationSection)
     return storage switch
         {
             StorageType.External => typeof(ExternalStorageRepository),
-            StorageType.Local => typeof(LocalStorageRepository),
+            StorageType.Filesystem => typeof(FileSystemStorageRepository),
+            StorageType.GridFS => typeof(GridFsStorageRepository),
             _ => throw new ArgumentOutOfRangeException(nameof(storage), storage,
                 "Storage type is not specified in settings"),
         };

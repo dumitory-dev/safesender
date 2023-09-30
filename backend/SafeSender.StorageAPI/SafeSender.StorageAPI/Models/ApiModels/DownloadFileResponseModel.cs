@@ -12,11 +12,6 @@ public class DownloadFileResponseModel
     /// File data byte array
     /// </summary>
     public byte[] FileData { get; set; } = Array.Empty<byte>();
-    
-    /// <summary>
-    /// Internal token
-    /// </summary>
-    public string StorageToken { get; set; } = default!;
 
     /// <summary>
     /// File name with extension

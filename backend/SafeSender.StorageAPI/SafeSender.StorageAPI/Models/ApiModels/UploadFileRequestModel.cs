@@ -14,11 +14,6 @@ public sealed class UploadFileRequestModel
     /// </summary>
     [Required]
     public byte[] FileData { get; set; } = Array.Empty<byte>();
-
-    /// <summary>
-    /// External storage file token
-    /// </summary>
-    public string? ExternalStorageToken { get; set; }
     
     /// <summary>
     /// File name with extension (if extension provided)

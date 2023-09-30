@@ -38,6 +38,9 @@ public class DownloadFileTests
 
         // Assert
         Assert.AreEqual(fileData, downloadFileModel.FileData);
+        Assert.AreEqual(uploadRequestModel.FileName, downloadFileModel.FileName);
+        Assert.AreEqual(uploadRequestModel.OriginalFileSize, downloadFileModel.OriginalFileSize);
+        Assert.AreEqual(uploadRequestModel.PasswordHash, downloadFileModel.PasswordHash);
         Assert.AreEqual(downloadResponse.StatusCode, StatusCodes.Status200OK);
     }
 }

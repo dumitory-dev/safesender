@@ -8,17 +8,17 @@ namespace SafeSender.StorageAPI.Repositories;
 /// <summary>
 /// Local storage repository
 /// </summary>
-public class LocalStorageRepository : IFilesRepository
+public class FileSystemStorageRepository : IFilesRepository
 {
     private readonly IOptionsMonitor<StorageOptions> _storageOptions;
-    private readonly ILogger<LocalStorageRepository> _logger;
+    private readonly ILogger<FileSystemStorageRepository> _logger;
 
     /// <summary>
-    /// Constructor for <see cref="LocalStorageRepository"/>
+    /// Constructor for <see cref="FileSystemStorageRepository"/>
     /// </summary>
     /// <param name="storageOptions">Storage options</param>
     /// <param name="logger">Logger</param>
-    public LocalStorageRepository(IOptionsMonitor<StorageOptions> storageOptions, ILogger<LocalStorageRepository> logger)
+    public FileSystemStorageRepository(IOptionsMonitor<StorageOptions> storageOptions, ILogger<FileSystemStorageRepository> logger)
     {
         _storageOptions = storageOptions;
         _logger = logger;
@@ -51,7 +51,7 @@ public class LocalStorageRepository : IFilesRepository
         {
             _logger.LogError(
                 "{ClassName} - File saving failed. Message: {Message}. Stack trace: {StackTrace}. Inner exception: {InnerException}",
-                nameof(LocalStorageRepository), e.Message, e.StackTrace, e.InnerException);
+                nameof(FileSystemStorageRepository), e.Message, e.StackTrace, e.InnerException);
 
             savingStatus = false;
         }
@@ -61,6 +61,6 @@ public class LocalStorageRepository : IFilesRepository
 
     private string GetFullPath(string fileName)
     {
-        return _storageOptions.CurrentValue.Local.Path + Path.DirectorySeparatorChar + fileName;
+        return _storageOptions.CurrentValue.Filesystem.Path + Path.DirectorySeparatorChar + fileName;
     }
 }

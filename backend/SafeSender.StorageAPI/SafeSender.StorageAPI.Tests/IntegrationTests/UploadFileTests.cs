@@ -15,12 +15,10 @@ public class UploadFileTests
     {
         // Arrange
         var client = SystemUnderTest.GetClient();
-        var externalStorageToken = "TestToken";
 
         var requestModel = new UploadFileRequestModel
         {
             FileData = Encoding.UTF8.GetBytes("TestString"),
-            ExternalStorageToken = externalStorageToken,
             FileName = "Test.txt",
             PasswordHash = Guid.NewGuid().ToString("N"),
             OriginalFileSize = 120000,
@@ -30,8 +28,13 @@ public class UploadFileTests
         
         // Act
         using var response = await client.Request(ApiConstants.UploadEndpointUrl).PostAsync(new ByteArrayContent(fileBytes));
+        
+        var responseModel = await response.GetJsonAsync<UploadFileResponseModel>();
 
         // Assert
         Assert.AreEqual(StatusCodes.Status200OK, response.StatusCode);
+        
+        Assert.IsNotNull(responseModel.Token);
+        Assert.IsNotEmpty(responseModel.Token);
     }
 }

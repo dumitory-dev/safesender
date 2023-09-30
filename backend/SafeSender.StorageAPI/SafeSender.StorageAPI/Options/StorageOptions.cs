@@ -17,5 +17,5 @@ public class StorageOptions
     /// </summary>
     public StorageType Type { get; set; }
 
-    public LocalStorageOptions Local { get; set; } = new();
+    public FilesystemStorageOptions Filesystem { get; set; } = new();
 }

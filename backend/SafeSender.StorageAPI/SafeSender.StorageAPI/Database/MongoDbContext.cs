@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 using SafeSender.StorageAPI.Models;
 using SafeSender.StorageAPI.Options;
 
@@ -8,6 +9,7 @@ namespace SafeSender.StorageAPI.Database;
 public class MongoDbContext : IMongoDbContext
 {
     public IMongoCollection<FileInternalInfo> FilesInternalInfos { get; init; }
+    public IGridFSBucket GridFSBucket { get; init; }
     
     public MongoDbContext(IOptionsMonitor<DatabaseOptions> databaseOptions)
     {
@@ -24,5 +26,6 @@ public class MongoDbContext : IMongoDbContext
         
         // Collections initialization
         FilesInternalInfos = database.GetCollection<FileInternalInfo>("FilesInternalInfos");
+        GridFSBucket = new GridFSBucket(database);
     }
 }

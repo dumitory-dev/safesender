@@ -1,6 +1,6 @@
 namespace SafeSender.StorageAPI.Options;
 
-public class LocalStorageOptions
+public class FilesystemStorageOptions
 {
     public string Path { get; set; } = ".";
 }

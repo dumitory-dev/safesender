@@ -23,7 +23,8 @@
     <PackageReference Include="Base62-Net" Version="1.2.157201" />
     <PackageReference Include="MessagePack" Version="2.5.124" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.19.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.21.0" />
+    <PackageReference Include="MongoDB.Driver.GridFS" Version="2.21.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
