@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using SafeSender.StorageAPI.Database;
 using SafeSender.StorageAPI.Interfaces;
@@ -20,7 +21,7 @@ public class GridFsStorageRepository : IFilesRepository
 
         if (!isValidId)
         {
-            throw new FileNotFoundException();
+            throw new ValidationException("Invalid internal storage id");
         }
         
         return await _context.GridFSBucket.DownloadAsBytesAsync(id);
