@@ -16,11 +16,11 @@ public class GridFsStorageRepository : IFilesRepository
     
     public async Task<byte[]> GetFileBytes(string fileHash)
     {
-        var isVaildId = ObjectId.TryParse(fileHash, out var id);
+        var isValidId = ObjectId.TryParse(fileHash, out var id);
 
-        if (!isVaildId)
+        if (!isValidId)
         {
-            return Array.Empty<byte>();
+            throw new FileNotFoundException();
         }
         
         return await _context.GridFSBucket.DownloadAsBytesAsync(id);

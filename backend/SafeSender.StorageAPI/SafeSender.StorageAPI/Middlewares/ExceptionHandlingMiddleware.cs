@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Text.Json;
 using AnonFilesApi.Exceptions;
@@ -36,6 +37,11 @@ public class ExceptionHandlingMiddleware
         {
             _logger.LogError($"Invalid download link: {ex}");
             await HandleExceptionAsync(httpContext, ex, HttpStatusCode.BadRequest);
+        }
+        catch (ValidationException ex)
+        {
+            _logger.LogError($"Validation exception: {ex}");
+            await HandleExceptionAsync(httpContext, ex);
         }
         catch (Exception ex)
         { 
