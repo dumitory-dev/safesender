@@ -2,11 +2,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 using AnonFilesApi.Implementations;
 using AnonFilesApi.Interfaces;
+using Hangfire;
 using MessagePack;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
 using SafeSender.StorageAPI.Database;
+using SafeSender.StorageAPI.Extensions;
 using SafeSender.StorageAPI.Interfaces;
+using SafeSender.StorageAPI.Jobs;
 using SafeSender.StorageAPI.Middlewares;
 using SafeSender.StorageAPI.Models.ApiModels;
 using SafeSender.StorageAPI.Models.Enums;
@@ -26,7 +29,7 @@ builder.Services.AddHttpLogging(
                                | HttpLoggingFields.ResponseStatusCode
                                | HttpLoggingFields.ResponseHeaders
                                | HttpLoggingFields.ResponseBody;
-        
+
         logger.ResponseHeaders.Add("Location");
         logger.RequestHeaders.Add("Origin");
     });
@@ -76,9 +79,33 @@ builder.Services.AddScoped<IAnonfilesApiClient, AnonfilesApiClient>();
 // Services registration
 builder.Services.AddScoped<IFilesService, FilesService>();
 
+//Jobs registration
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseInMemoryStorage());
+builder.Services.AddHangfireServer();
+
 var app = builder.Build();
 
-app.UseHttpLogging();
+if (!builder.Environment.IsDevelopment())
+{
+    app.UseHttpLogging();
+}
+
+// TODO: Add authorization to use Hangfire dashboard in production
+if (app.Environment.IsDevelopment())
+{
+    app.UseHangfireDashboard("/hangfire", new DashboardOptions
+    {
+        Authorization = new[] { new FreeDashboardAuthorization() }
+    });
+    
+    app.MapHangfireDashboard();
+}
+
+RecurringJob.AddOrUpdate<FileCleanupJob>("CleanupExpiredFilesJob", job => job.CleanupExpiredFiles(), Cron.Daily);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -93,6 +120,9 @@ app.UseHttpsRedirection();
 
 app.UseCors(corsPolicyAcceptAllName);
 
+// TODO: Replace with .AddHealthChecks() / .MapHealthChecks()
+app.MapGet("api/health", () => Results.Ok("Healthy as hell"));
+
 app.MapGet("api/download/{token}", async (
         [Required] string token,
         [FromServices] IFilesService filesService) =>
@@ -101,7 +131,7 @@ app.MapGet("api/download/{token}", async (
         {
             return Results.BadRequest("Token cannot be null, empty or white space");
         }
-        
+
         var downloadFileModel = await filesService.DownloadFile(token);
 
         return Results.Bytes(MessagePackSerializer.Serialize(downloadFileModel), "application/octet-stream");
@@ -115,6 +145,11 @@ app.MapPost("api/upload", async (
         [FromServices] IFilesService filesService) =>
     {
         var model = await MessagePackSerializer.DeserializeAsync<UploadFileRequestModel>(request.Body);
+
+        if (model.OriginalFileSize.GetLengthInMegabytes() > 50)
+        {
+            return Results.BadRequest("File size cannot be more than 50 Mb");
+        }
         
         var internalToken = await filesService.UploadFile(model);
 
@@ -130,11 +165,11 @@ Type GetFileStorageRepositoryType(IConfigurationSection configurationSection)
     Enum.TryParse(configurationSection.GetSection("Type").Value, out StorageType storage);
 
     return storage switch
-        {
-            StorageType.External => typeof(ExternalStorageRepository),
-            StorageType.Filesystem => typeof(FileSystemStorageRepository),
-            StorageType.GridFS => typeof(GridFsStorageRepository),
-            _ => throw new ArgumentOutOfRangeException(nameof(storage), storage,
-                "Storage type is not specified in settings"),
-        };
+    {
+        StorageType.External => typeof(ExternalStorageRepository),
+        StorageType.Filesystem => typeof(FileSystemStorageRepository),
+        StorageType.GridFS => typeof(GridFsStorageRepository),
+        _ => throw new ArgumentOutOfRangeException(nameof(storage), storage,
+            "Storage type is not specified in settings"),
+    };
 }
