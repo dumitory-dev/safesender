@@ -9,8 +9,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useDataContext } from '../../../core/context/DataContext';
 
-
-
 export const Header = () => {
 
     useEffect( () => {

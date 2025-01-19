@@ -2,7 +2,6 @@ import React from 'react';
 
 import { useFileReader } from '../../../core/context/FileReadContext';
 
-
 export const StatusBar = (): React.ReactElement => {
 
     const { progress, isReadingFinished } = useFileReader();

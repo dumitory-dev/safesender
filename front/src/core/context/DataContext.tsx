@@ -1,6 +1,4 @@
-import { useRouter } from 'next/router';
-import { createContext, useContext, useEffect, useState } from 'react';
-
+import { createContext, useContext, useState } from 'react';
 
 export interface DataContextProps {
     token: string;
@@ -22,9 +20,6 @@ export const DataProvider = ( { children }: { children: any } ): React.ReactElem
     const [ token, setToken ] = useState<string>( '' );
     const [ link, setLink ] = useState<string>( '' );
     const [ hasFile, setHasFile ] = useState<boolean>( false );
-
-    const router = useRouter();
-
 
     const setHasFileHandler = ( state: boolean ) => {
         setHasFile( state );

@@ -1,6 +1,5 @@
 import styles from './ThemeToggle.module.css';
 
-
 export interface ToggleProps {
     darkMode?: boolean;
     clickHandler: any;

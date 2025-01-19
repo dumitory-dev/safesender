@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
-
 
 export interface ButtonProps {
     disabled?: boolean;
@@ -11,9 +10,7 @@ export interface ButtonProps {
 }
 
 export const Button = ( { onClickHandler, disabled, icon, color, labelText }: ButtonProps ): React.ReactElement => {
-
     return (
-
         <button
             onClick={onClickHandler}
             disabled={disabled}
@@ -22,17 +19,5 @@ export const Button = ( { onClickHandler, disabled, icon, color, labelText }: Bu
             <Image className='mr-[8.5px]' src={icon} alt='share' />
             {labelText}
         </button>
-
-        // <label
-        //     onClick={onClickHandler}
-        //     className='dark:bg-black bg-blue text-white border-[3px] rounded-[8px] h-[64px] flex items-center justify-center cursor-pointer text-[18px] font-bold dark:text-white'>
-
-        //     <div className='flex items-center '>
-        //         <Image className='mr-[8.5px]' src={icon} alt='share' />
-        //         {labelText}
-        //     </div>
-
-        //     <input type="button" disabled={disabled} />
-        // </label>
     )
 }
