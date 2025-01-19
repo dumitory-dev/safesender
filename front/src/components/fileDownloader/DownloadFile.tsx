@@ -155,21 +155,14 @@ export const DownloadFile = ( { token }: DownloadFileProps ): React.ReactElement
                         </div>
 
                         <div className='pt-[24px] w-full box-border'>
-
                             <Button
                                 disabled={!password}
                                 labelText='Download'
                                 onClickHandler={clickHandler}
                                 icon={downLoadIcon} />
-
                         </div>
-
                     </div>
             }
-
         </>
-
-
-
     )
 }
