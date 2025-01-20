@@ -9,9 +9,7 @@ import fileIcoBlue from '../../../../public/fileIcoBlue.svg';
 import { StatusBar } from '../statusBar/StatusBar';
 import { useFileReader } from '../../../core/context/FileReadContext';
 
-
 const MB = 1000_000_000;
-
 
 export interface FileItemProps {
     isBlured: boolean;
@@ -21,7 +19,9 @@ export interface FileItemProps {
     deleteFile: any;
 }
 
-export const FileItem = ( { isBlured, isDeletable, file, fileSize, deleteFile }: FileItemProps ): React.ReactElement => {
+export const FileItem = (
+    { isBlured, isDeletable, file, fileSize, deleteFile }: FileItemProps
+): React.ReactElement => {
 
     const theme = useTheme();
     const { progress } = useFileReader();
@@ -41,11 +41,10 @@ export const FileItem = ( { isBlured, isDeletable, file, fileSize, deleteFile }:
         } else {
             return Number( fs ).toFixed( 2 );
         }
-
     };
 
     return (
-        <div className={`p-[18px] w-[95%] sm:w-[100%] rounded-[8px] bg-[#F3F3F3] flex items-center justify-between  flex-col box-border ${ isBlured && 'blur-sm' }`}>
+        <div className={`p-[18px] w-[95%] sm:w-[100%] rounded-[8px] bg-[#F3F3F3] flex items-center justify-between  flex-col box-border ${ isBlured && 'blur-sm pointer-events-none' }`}>
 
             <div className='w-full flex justify-between'>
 
@@ -57,8 +56,8 @@ export const FileItem = ( { isBlured, isDeletable, file, fileSize, deleteFile }:
                         alt='file icon' />
 
                     <div className='flex flex-col h-[40px] justify-between'>
-                        <div className='font-bold text-[14px] dark:text-black text-blue'>{file?.name}</div>
-                        <div className='text-[14px] text-gray'>{getFileSize()} MB</div>
+                        <div className='font-bold text-[14px] dark:text-black text-blue select-none  pointer-events-none'>{file?.name}</div>
+                        <div className='text-[14px] text-gray select-none'>{getFileSize()} MB</div>
                     </div>
 
                 </div>

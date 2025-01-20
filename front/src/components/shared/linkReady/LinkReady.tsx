@@ -5,8 +5,6 @@ import copyIco from './../../../../public/copyIco.svg';
 import okIco from './../../../../public/ok.svg';
 
 import { Button } from '../button/Button';
-import { SmallInfoPanel } from '../smallInfoPanel/SmallInfoPanel';
-
 
 export const LinkReadyBox = ( { extLink }: { extLink: string } ): React.ReactElement => {
 

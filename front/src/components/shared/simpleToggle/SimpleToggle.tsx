@@ -1,12 +1,10 @@
 import { useTheme } from '../../../core/context/ThemeContext';
 
-
 export interface SimpleToggleProps {
     state: boolean;
     clickHandler: any;
     label: string;
 }
-
 
 export const SimpleToggle = ( { state, clickHandler, label }: SimpleToggleProps ) => {
 
